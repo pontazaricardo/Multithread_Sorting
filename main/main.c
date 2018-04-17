@@ -151,7 +151,7 @@ int main(int argc, char *argv[])
         return -1;
     }
 
-    //At this point, we have the two parameters:
+    //At this point, we are sure that we have exactly two parameters.
 
     FILE *finput, *foutput;
 
@@ -168,41 +168,50 @@ int main(int argc, char *argv[])
     if (foutput == NULL)
         exit(EXIT_FAILURE);
 
+    //We read the input file line by line.
+
     while ((read = getline(&line, &len, finput)) != -1)
     {
-        printf("Retrieved line of length %zu :\n", read);
-        printf("%s", line);
+        /*printf("Retrieved line of length %zu :\n", read);
+        printf("%s", line);*/
+
+        printf("Retrieved: %s", line);
 
         char *rest = line;
         char *token;
+
+        //We allocate the read elements in a dynamic array (we reconstruct it each time we find a new element).
 
         int_array inputArray;
         int_array_init(&inputArray);
 
         while ((token = strtok_r(rest, " ", &rest))){
-            printf("%s\n", token);
+            //printf("%s\n", token);
             int number = atoi(token);
             int_array_push_back(&inputArray, number);
         }
 
-        int i;
+        /*int i;
         for(i = 0; i < inputArray.length; i++)
             printf("a[%d] = %d\n", i, inputArray.array[i]);
+        */
+        
+        //We convert the dynamic array into an array in order to start the merging by threads
 
-        //static const unsigned int N = a.length;
         int *data = malloc(inputArray.length * sizeof(*data));
 
-        int k;
+        int i,k;
         for(k=0;k<inputArray.length;k++){
             data[k]=inputArray.array[k];
         }
 
-        merge_sort(data, inputArray.length);
+        merge_sort(data, inputArray.length);    // HERE WE MERGE BY THREADS
+
+        //At this point, data contains the sorted array.
+
         for (i=0; i<inputArray.length; ++i)
         {
-            printf("%4d ", data[i]);
-            if ((i+1)%8 == 0)
-                printf("\n");
+            printf("%d ", data[i]);
         }
         printf("\n");
 
