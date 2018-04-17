@@ -159,8 +159,13 @@ int main(int argc, char *argv[])
     size_t len = 0;
     ssize_t read;
 
+    //We make sure we can read the input file and write in the output file
     finput = fopen(argv[1], "r");
     if (finput == NULL)
+        exit(EXIT_FAILURE);
+
+    foutput = fopen(argv[2], "w");
+    if (foutput == NULL)
         exit(EXIT_FAILURE);
 
     while ((read = getline(&line, &len, finput)) != -1)
