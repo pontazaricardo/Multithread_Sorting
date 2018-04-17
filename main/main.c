@@ -212,16 +212,25 @@ int main(int argc, char *argv[])
         for (i=0; i<inputArray.length; ++i)
         {
             printf("%d ", data[i]);
+            
+            fprintf(foutput, "%d", data[i]);
+
+            if(i<inputArray.length-1)
+                fprintf(foutput, " ");
         }
         printf("\n");
+        fprintf(foutput, "\n");
 
         free(data);
     }
 
+    //We close the files and release the memory
+
     fclose(finput);
+    fclose(foutput);
+
     if (line)
         free(line);
-    //exit(EXIT_SUCCESS);
 
     printf("---Last line---");
 
